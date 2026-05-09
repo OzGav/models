@@ -186,6 +186,8 @@ class MediaItemMetadata(DataClassDictMixin):
     explicit: bool | None = None
     # NOTE: images is a list of available images, sorted by preference
     images: UniqueList[MediaItemImage] | None = None
+    # DEPRECATED: superseded by Track.work; kept as a fallback for tracks
+    # without a Work tag set, and for legacy clients that still read this field.
     grouping: str | None = None
     genres: set[str] | None = None
     mood: str | None = None
@@ -201,6 +203,8 @@ class MediaItemMetadata(DataClassDictMixin):
     has_transcript: bool | None = None
     label: str | None = None
     links: set[MediaItemLink] | None = None
+    # DEPRECATED: superseded by Track.credits / Album.credits (role-typed credits).
+    # Populated server-side as a derived view from credits for back-compat.
     performers: set[str] | None = None
     preview: str | None = None
     popularity: int | None = None
