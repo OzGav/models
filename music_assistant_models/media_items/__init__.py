@@ -20,6 +20,7 @@ from .media_item import (
     Audiobook,
     AudioSource,
     BrowseFolder,
+    Credit,
     Genre,
     ItemMapping,
     MediaCollection,
@@ -33,6 +34,7 @@ from .media_item import (
     RecommendationFolder,
     SoundEffect,
     Track,
+    Work,
 )
 from .metadata import (
     AudioMetadata,
@@ -71,6 +73,7 @@ __all__ = [
     "Audiobook",
     "AudiobookSummary",
     "BrowseFolder",
+    "Credit",
     "Genre",
     "GenreSummary",
     "ItemMapping",
@@ -103,6 +106,7 @@ __all__ = [
     "Track",
     "TrackSummary",
     "UniqueList",
+    "Work",
 ]
 
 
@@ -133,6 +137,8 @@ def media_from_dict(media_item: dict[str, Any]) -> MediaItemType | ItemMapping:
         return Genre.from_dict(media_item)
     if media_item["media_type"] == "track":
         return Track.from_dict(media_item)
+    if media_item["media_type"] == "work":
+        return Work.from_dict(media_item)
     if media_item["media_type"] == "playlist":
         return Playlist.from_dict(media_item)
     if media_item["media_type"] == "radio":
