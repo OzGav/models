@@ -18,6 +18,7 @@ from music_assistant_models.enums import (
     ExternalID,
     ImageType,
     MediaType,
+    Period,
     RecommendationFolderType,
     WorkType,
 )
@@ -338,6 +339,7 @@ class Artist(MediaItem):
 
     media_type: MediaType = MediaType.ARTIST
     artist_type: ArtistType = ArtistType.SINGER
+    period: Period | None = None
     is_classical: bool = False
 
 
