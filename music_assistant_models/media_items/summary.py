@@ -32,6 +32,7 @@ from .media_item import (
     Podcast,
     Radio,
     Track,
+    Work,
 )
 from .metadata import MediaItemMetadata
 from .provider_mapping import ProviderMapping
@@ -122,6 +123,19 @@ class TrackSummary(_SummaryBase, Track):
 
 
 @dataclass(kw_only=True, eq=False)
+class WorkSummary(_SummaryBase, Work):
+    """Summary variant of Work, used for listings."""
+
+    composers: UniqueList[ItemMappingSummary] = field(  # type: ignore[assignment]
+        default_factory=UniqueList
+    )
+    parent_work: ItemMappingSummary | None = None
+    arrangement_of: UniqueList[ItemMappingSummary] = field(  # type: ignore[assignment]
+        default_factory=UniqueList
+    )
+
+
+@dataclass(kw_only=True, eq=False)
 class PlaylistSummary(_SummaryBase, Playlist):
     """Summary variant of Playlist, used for listings."""
 
@@ -154,6 +168,7 @@ MediaItemSummaryType = (
     ArtistSummary
     | AlbumSummary
     | TrackSummary
+    | WorkSummary
     | PlaylistSummary
     | RadioSummary
     | AudiobookSummary
