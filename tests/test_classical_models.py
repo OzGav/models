@@ -4,6 +4,10 @@ from music_assistant_models.enums import ArtistRole, ExternalID, MediaType, Peri
 from music_assistant_models.media_items import (
     Album,
     Artist,
+    ArtistSummary,
+    ClassicalComposer,
+    ClassicalPerformer,
+    ClassicalWorkEntry,
     Credit,
     ItemMapping,
     ItemMappingSummary,
@@ -303,7 +307,7 @@ def test_work_summary_roundtrip() -> None:
 
 
 def test_recording_roundtrip() -> None:
-    """Recording round-trips with its movement tracks, credits and album."""
+    """Recording round-trips with its movement tracks, credits and albums."""
     tracks = [
         Track(
             item_id=f"t{number}",
@@ -323,13 +327,17 @@ def test_recording_roundtrip() -> None:
         tracks=tracks,
         credits=[Credit(artist=_artist_mapping("Karajan"), role=ArtistRole.CONDUCTOR)],
         year=1963,
-        album=ItemMapping(item_id="al1", provider="test", name="Album", media_type=MediaType.ALBUM),
+        albums=[
+            ItemMapping(item_id="al1", provider="test", name="Album", media_type=MediaType.ALBUM),
+            ItemMapping(item_id="al2", provider="test", name="Reissue", media_type=MediaType.ALBUM),
+        ],
         duration=1200,
     )
     payload = recording.to_dict()
     restored = Recording.from_dict(payload)
     assert [x.movement_number for x in restored.tracks] == [1, 2]
     assert restored.credits[0].role is ArtistRole.CONDUCTOR
+    assert [x.name for x in restored.albums] == ["Album", "Reissue"]
     assert restored.to_dict() == payload
 
 
@@ -367,3 +375,25 @@ def test_classical_tag_roundtrip() -> None:
     track.classical_tag = album.classical_tag = True
     assert Track.from_dict(track.to_dict()).classical_tag
     assert Album.from_dict(album.to_dict()).classical_tag
+
+
+def test_classical_rows_roundtrip() -> None:
+    """The classical list rows round-trip with their summaries, roles and counts."""
+    artist = ArtistSummary(item_id="a1", provider="library", name="Herbert von Karajan")
+    work = WorkSummary(item_id="w1", provider="library", name="Symphony No. 5")
+    composer = ClassicalComposer(artist=artist, work_count=9, recording_count=12)
+    performer = ClassicalPerformer(
+        artist=artist,
+        main_role=ArtistRole.CONDUCTOR,
+        roles=[ArtistRole.CONDUCTOR, ArtistRole.SOLOIST],
+        work_count=3,
+        recording_count=4,
+    )
+    entry = ClassicalWorkEntry(work=work, recording_count=7)
+
+    for row in (composer, performer, entry):
+        assert type(row).from_dict(row.to_dict()).to_dict() == row.to_dict()
+    assert ClassicalPerformer.from_dict(performer.to_dict()).roles == [
+        ArtistRole.CONDUCTOR,
+        ArtistRole.SOLOIST,
+    ]
