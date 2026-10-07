@@ -356,3 +356,14 @@ def test_track_summary_work_omits_none_keys() -> None:
     payload = summary.to_dict()
     assert not [k for k, v in payload["work"].items() if v is None]
     assert TrackSummary.from_dict(payload).to_dict() == payload
+
+
+def test_classical_tag_roundtrip() -> None:
+    """The classical tag on tracks and albums defaults to False and round-trips."""
+    track = Track(item_id="t1", provider="test", name="Track", provider_mappings=set())
+    album = Album(item_id="a1", provider="test", name="Album", provider_mappings=set())
+    assert not track.classical_tag
+    assert not album.classical_tag
+    track.classical_tag = album.classical_tag = True
+    assert Track.from_dict(track.to_dict()).classical_tag
+    assert Album.from_dict(album.to_dict()).classical_tag
