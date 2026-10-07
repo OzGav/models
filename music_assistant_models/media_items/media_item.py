@@ -376,6 +376,7 @@ class Album(MediaItem):
     album_type: AlbumType = AlbumType.UNKNOWN
     credits: list[Credit] = field(default_factory=list)
     is_classical: bool = False
+    classical_tag: bool = False  # the source marks this album as classical
 
     @property
     def artist_str(self) -> str:
@@ -423,6 +424,7 @@ class Track(MediaItem):
     movement_total: int | None = None
     movement_name: str | None = None  # e.g. "I. Allegro con brio"
     is_classical: bool = False
+    classical_tag: bool = False  # the source marks this track as classical
 
     @property
     def image(self) -> MediaItemImage | None:
