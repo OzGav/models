@@ -117,9 +117,9 @@ class _MediaItemBase(DataClassDictMixin):
             # and not the track id (as that is just the reference
             #  of the recording on a specific album)
             self.add_external_id(ExternalID.MB_RECORDING, value)
+            return
         elif self.media_type == MediaType.WORK:
             self.add_external_id(ExternalID.MB_WORK, value)
-            return
 
     def __hash__(self) -> int:
         """Return custom hash."""
@@ -765,6 +765,7 @@ def _deserialize_recommendation_items(
         MediaType.PODCAST: Podcast,
         MediaType.PODCAST_EPISODE: PodcastEpisode,
         MediaType.GENRE: Genre,
+        MediaType.WORK: Work,
         MediaType.AUDIO_SOURCE: AudioSource,
         MediaType.COLLECTION: MediaCollection,
     }
