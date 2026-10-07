@@ -120,6 +120,7 @@ class TrackSummary(_SummaryBase, Track):
         default_factory=UniqueList
     )
     album: ItemMappingSummary | None = None
+    work: ItemMappingSummary | None = None
 
 
 @dataclass(kw_only=True, eq=False)
