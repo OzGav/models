@@ -330,6 +330,14 @@ class ItemMapping(_LocalizableName, _MediaItemBase):
         )
 
 
+def _deserialize_period(value: str) -> Period | None:
+    """Deserialize a Period, returning None for values this version does not know."""
+    try:
+        return Period(value)
+    except ValueError:
+        return None
+
+
 @dataclass(kw_only=True)
 class Artist(MediaItem):
     """Model for an artist."""
@@ -339,7 +347,9 @@ class Artist(MediaItem):
 
     media_type: MediaType = MediaType.ARTIST
     artist_type: ArtistType = ArtistType.SINGER
-    period: Period | None = None
+    period: Period | None = field(
+        default=None, metadata=field_options(deserialize=_deserialize_period)
+    )
     is_classical: bool = False
 
 
