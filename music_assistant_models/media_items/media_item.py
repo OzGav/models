@@ -488,6 +488,23 @@ class Work(MediaItem):
 
 
 @dataclass(kw_only=True)
+class Recording(DataClassDictMixin):
+    """
+    One performance of a Work, grouping the tracks that hold its movements.
+
+    Recordings are not stored as media items; the server builds them on request.
+    """
+
+    key: str  # stable identifier of this grouping
+    work: ItemMapping
+    tracks: list[Track] = field(default_factory=list)  # in movement order
+    credits: list[Credit] = field(default_factory=list)  # performers, composer excluded
+    year: int | None = None
+    album: ItemMapping | None = None
+    duration: int = 0  # total of all movements, in seconds
+
+
+@dataclass(kw_only=True)
 class Playlist(_LocalizableTitle, MediaItem):
     """Model for a playlist."""
 
