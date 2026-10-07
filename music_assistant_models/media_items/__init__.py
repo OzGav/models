@@ -60,6 +60,7 @@ from .summary import (
     RadioSummary,
     SummaryDialect,
     TrackSummary,
+    WorkSummary,
 )
 
 __all__ = [
@@ -107,6 +108,7 @@ __all__ = [
     "TrackSummary",
     "UniqueList",
     "Work",
+    "WorkSummary",
 ]
 
 
