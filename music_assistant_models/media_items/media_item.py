@@ -502,7 +502,8 @@ class Recording(DataClassDictMixin):
     tracks: list[Track] = field(default_factory=list)  # in movement order
     credits: list[Credit] = field(default_factory=list)  # performers, composer excluded
     year: int | None = None
-    album: ItemMapping | None = None
+    # every album the recording appears on, the album its tracks come from first
+    albums: list[ItemMapping] = field(default_factory=list)
     duration: int = 0  # total of all movements, in seconds
 
 
