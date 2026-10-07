@@ -482,6 +482,9 @@ class Work(MediaItem):
     work_type: WorkType | None = None
     parent_work: ItemMapping | None = None  # for movements / sub-works
     arrangement_of: UniqueList[ItemMapping] = field(default_factory=UniqueList)
+    composition_year: int | None = None
+    language: str | None = None  # language of the sung text, for vocal works
+    musical_key: str | None = None  # e.g. "C minor"
 
 
 @dataclass(kw_only=True)
