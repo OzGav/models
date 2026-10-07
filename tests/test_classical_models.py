@@ -7,8 +7,10 @@ from music_assistant_models.media_items import (
     Credit,
     ItemMapping,
     ItemMappingSummary,
+    RecommendationFolder,
     Recording,
     Track,
+    TrackSummary,
     Work,
     WorkSummary,
     media_from_dict,
@@ -329,3 +331,28 @@ def test_recording_roundtrip() -> None:
     assert [x.movement_number for x in restored.tracks] == [1, 2]
     assert restored.credits[0].role is ArtistRole.CONDUCTOR
     assert restored.to_dict() == payload
+
+
+def test_recommendation_folder_deserializes_work_items() -> None:
+    """A Work inside a recommendation row comes back as a Work, not a bare mapping."""
+    work = Work(item_id="w1", provider="library", name="Symphony No. 5", provider_mappings=set())
+    folder = RecommendationFolder(
+        item_id="works", provider="library", name="Works", items=UniqueList([work])
+    )
+    restored = RecommendationFolder.from_dict(folder.to_dict())
+    assert isinstance(restored.items[0], Work)
+
+
+def test_track_summary_work_omits_none_keys() -> None:
+    """TrackSummary carries its work as a slim mapping without None-valued keys."""
+    summary = TrackSummary(
+        item_id="t1",
+        provider="library",
+        name="I. Allegro con brio",
+        work=ItemMappingSummary(
+            item_id="w1", provider="library", name="Symphony No. 5", media_type=MediaType.WORK
+        ),
+    )
+    payload = summary.to_dict()
+    assert not [k for k, v in payload["work"].items() if v is None]
+    assert TrackSummary.from_dict(payload).to_dict() == payload
