@@ -15,7 +15,8 @@ license = {text = "Apache-2.0"}
 readme = "README.md"
 requires-python = ">=3.13"
 # The version is set by GH action on release
-version = "0.0.0"
+# TEMP(classical): a real version so installs from GitHub satisfy version requirements
+version = "1.1.216+classical"
 
 [project.optional-dependencies]
 test = [
