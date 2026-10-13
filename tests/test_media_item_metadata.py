@@ -13,3 +13,19 @@ def test_update_always_overwrites_last_musicbrainz_lookup() -> None:
     metadata = MediaItemMetadata(last_musicbrainz_lookup=100)
     metadata.update(MediaItemMetadata(last_musicbrainz_lookup=200))
     assert metadata.last_musicbrainz_lookup == 200
+
+
+def test_update_always_overwrites_last_musicbrainz_recording_lookup() -> None:
+    """A newer recording lookup timestamp replaces the stored one, like the other markers."""
+    metadata = MediaItemMetadata(last_musicbrainz_recording_lookup=100)
+    metadata.update(MediaItemMetadata(last_musicbrainz_recording_lookup=200))
+    assert metadata.last_musicbrainz_recording_lookup == 200
+
+
+def test_update_keeps_a_stored_recording_year() -> None:
+    """An update fills an empty recording year and keeps a stored one."""
+    metadata = MediaItemMetadata()
+    metadata.update(MediaItemMetadata(recording_year=1962))
+    metadata.update(MediaItemMetadata(recording_year=1977))
+    assert metadata.recording_year == 1962
+    assert MediaItemMetadata.from_dict({"recording_year": 1986}).recording_year == 1986
