@@ -436,3 +436,37 @@ def test_classical_rows_roundtrip() -> None:
     ]
     assert ClassicalWorkEntry.from_dict(entry.to_dict()).part_names == ["Aria", "Duet"]
     assert ClassicalWorkEntry(work=work).part_names == []
+
+
+def test_track_work_roundtrips_as_full_work_or_mapping() -> None:
+    """A track's work keeps its form: a provider's full work, or a mapping to a library work."""
+    parent = ItemMapping(
+        item_id="La bohème", provider="spotify", name="La bohème", media_type=MediaType.WORK
+    )
+    composer = _artist_mapping("Giacomo Puccini")
+    full = Work(
+        item_id="La bohème, Act I",
+        provider="spotify",
+        name="La bohème, Act I",
+        provider_mappings=set(),
+        composers=UniqueList([composer]),
+        parent_work=parent,
+    )
+    mapping = ItemMapping(item_id="7", provider="library", name="Work", media_type=MediaType.WORK)
+
+    with_full = Track.from_dict(
+        Track(
+            item_id="t1", provider="spotify", name="x", provider_mappings=set(), work=full
+        ).to_dict()
+    )
+    with_mapping = Track.from_dict(
+        Track(
+            item_id="t2", provider="library", name="x", provider_mappings=set(), work=mapping
+        ).to_dict()
+    )
+
+    assert isinstance(with_full.work, Work)
+    assert with_full.work.parent_work == parent
+    assert [x.name for x in with_full.work.composers] == ["Giacomo Puccini"]
+    assert type(with_mapping.work) is ItemMapping
+    assert with_mapping.work.item_id == "7"

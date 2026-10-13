@@ -419,7 +419,8 @@ class Track(MediaItem):
     # only populated when a FULL track is requested (get_track), not on track listings
     audio_metadata: AudioMetadata | None = None
     credits: list[Credit] = field(default_factory=list)
-    work: ItemMapping | None = None
+    # a provider describes a work the library does not hold yet as a full Work
+    work: Work | ItemMapping | None = None
     movement_number: int | None = None
     movement_total: int | None = None
     movement_name: str | None = None  # e.g. "I. Allegro con brio"
