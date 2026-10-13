@@ -483,7 +483,10 @@ class Work(MediaItem):
     catalog_numbers: list[str] = field(default_factory=list)  # ["Op. 67", "BWV 1041", "K. 525"]
     work_type: WorkType | None = None
     parent_work: ItemMapping | None = None  # for movements / sub-works
-    arrangement_of: UniqueList[ItemMapping] = field(default_factory=UniqueList)
+    # the related works below are slim works that carry their composers
+    arrangement_of: UniqueList[Work | ItemMapping] = field(default_factory=UniqueList)
+    arrangements: UniqueList[Work | ItemMapping] = field(default_factory=UniqueList)
+    parts: UniqueList[Work | ItemMapping] = field(default_factory=UniqueList)  # e.g. its arias
     composition_year: int | None = None
     language: str | None = None  # language of the sung text, for vocal works
     musical_key: str | None = None  # e.g. "C minor"
@@ -499,6 +502,7 @@ class Recording(DataClassDictMixin):
 
     key: str  # stable identifier of this grouping
     work: ItemMapping
+    parent_work: ItemMapping | None = None  # the work that `work` is a part of
     tracks: list[Track] = field(default_factory=list)  # in movement order
     credits: list[Credit] = field(default_factory=list)  # performers, composer excluded
     year: int | None = None
