@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 
 from mashumaro import DataClassDictMixin
 
-from music_assistant_models.enums import ArtistRole
+from music_assistant_models.enums import ArtistRole, Period
 
 from .metadata import MediaItemImage
 from .summary import ArtistSummary, WorkSummary
@@ -41,3 +41,4 @@ class ClassicalWorkEntry(DataClassDictMixin):
     work: WorkSummary
     recording_count: int = 0
     part_names: list[str] = field(default_factory=list)  # names of its parts in the library
+    period: Period | None = None  # the period of its (first) composer
