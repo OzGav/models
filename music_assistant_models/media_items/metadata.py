@@ -218,6 +218,11 @@ class MediaItemMetadata(DataClassDictMixin):
     # last_musicbrainz_lookup: timestamp the item was last looked up on MusicBrainz,
     # set on every attempt, so an item MusicBrainz does not know is not retried endlessly
     last_musicbrainz_lookup: int | None = None
+    # recording_year: the year a track was recorded, as MusicBrainz dates its sessions
+    recording_year: int | None = None  # tracks only
+    # last_musicbrainz_recording_lookup: timestamp a track's MusicBrainz recording was last
+    # read for its performers and recording year
+    last_musicbrainz_recording_lookup: int | None = None  # tracks only
 
     def update(
         self,
@@ -256,6 +261,7 @@ class MediaItemMetadata(DataClassDictMixin):
                     "popularity",
                     "last_refresh",
                     "last_musicbrainz_lookup",
+                    "last_musicbrainz_recording_lookup",
                 )
             ) or cur_val is None:
                 setattr(self, fld.name, new_val)
