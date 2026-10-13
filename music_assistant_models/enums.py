@@ -1165,6 +1165,9 @@ class SortField(StrEnum):
     FAVORITE_TIMESTAMP = "favorite_timestamp"  # when the calling user liked the item
     ORIGINAL = "original"  # the order the source lists the items in
     RELEASE_DATE = "release_date"  # full release date, falling back to the release year
+    COMPOSER = "composer"  # a work's first composer, then catalog number, then title
+    RECORDING_COUNT = "recording_count"  # the number of recordings of a work or performer
+    WORK_COUNT = "work_count"  # the number of works of a composer
 
 
 class SortDirection(StrEnum):
@@ -1202,3 +1205,8 @@ class ListingType(StrEnum):
     GENRE_TRACKS = "genre_tracks"  # the tracks of a genre
     GENRE_ALBUMS = "genre_albums"  # the albums of a genre
     BROWSE = "browse"  # the items in a browse folder
+    LIBRARY_WORKS = "library_works"  # the works in the library
+    CLASSICAL_COMPOSERS = "classical_composers"  # the composers of the classical view
+    CLASSICAL_PERFORMERS = "classical_performers"  # the performers of the classical view
+    CLASSICAL_WORKS = "classical_works"  # the works of the classical view
+    CLASSICAL_OTHER_TRACKS = "classical_other_tracks"  # classical tracks without a work
