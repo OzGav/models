@@ -280,6 +280,37 @@ def test_artist_unknown_period_deserializes_to_none() -> None:
     assert Artist.from_dict(payload).period is None
 
 
+def test_work_related_works_roundtrip() -> None:
+    """The related works of a Work round-trip as slim works with composers, or as mappings."""
+    arrangement = Work(
+        item_id="w2",
+        provider="library",
+        name="Symphony No. 5 (piano transcription)",
+        provider_mappings=set(),
+        composers=UniqueList([_artist_mapping("Beethoven", "a1")]),
+    )
+    work = Work(
+        item_id="w1",
+        provider="library",
+        name="Symphony No. 5",
+        provider_mappings=set(),
+        arrangement_of=UniqueList(
+            [ItemMapping(item_id="w0", provider="test", name="Sketch", media_type=MediaType.WORK)]
+        ),
+        arrangements=UniqueList([arrangement]),
+        parts=UniqueList(
+            [Work(item_id="w3", provider="library", name="I.", provider_mappings=set())]
+        ),
+    )
+    payload = work.to_dict()
+    restored = Work.from_dict(payload)
+    assert isinstance(restored.arrangement_of[0], ItemMapping)
+    assert isinstance(restored.arrangements[0], Work)
+    assert [x.name for x in restored.arrangements[0].composers] == ["Beethoven"]
+    assert isinstance(restored.parts[0], Work)
+    assert restored.to_dict() == payload
+
+
 def test_work_summary_roundtrip() -> None:
     """WorkSummary round-trips and omits None-valued keys, also in nested composers."""
     summary = WorkSummary(
@@ -307,7 +338,7 @@ def test_work_summary_roundtrip() -> None:
 
 
 def test_recording_roundtrip() -> None:
-    """Recording round-trips with its movement tracks, credits and albums."""
+    """Recording round-trips with its parent work, movement tracks, credits and albums."""
     tracks = [
         Track(
             item_id=f"t{number}",
@@ -324,6 +355,9 @@ def test_recording_roundtrip() -> None:
         work=ItemMapping(
             item_id="w1", provider="test", name="Symphony No. 5", media_type=MediaType.WORK
         ),
+        parent_work=ItemMapping(
+            item_id="w0", provider="test", name="Symphonies", media_type=MediaType.WORK
+        ),
         tracks=tracks,
         credits=[Credit(artist=_artist_mapping("Karajan"), role=ArtistRole.CONDUCTOR)],
         year=1963,
@@ -338,7 +372,10 @@ def test_recording_roundtrip() -> None:
     assert [x.movement_number for x in restored.tracks] == [1, 2]
     assert restored.credits[0].role is ArtistRole.CONDUCTOR
     assert [x.name for x in restored.albums] == ["Album", "Reissue"]
+    assert restored.parent_work is not None
+    assert restored.parent_work.name == "Symphonies"
     assert restored.to_dict() == payload
+    assert Recording.from_dict({**payload, "parent_work": None}).parent_work is None
 
 
 def test_recommendation_folder_deserializes_work_items() -> None:
@@ -389,7 +426,7 @@ def test_classical_rows_roundtrip() -> None:
         work_count=3,
         recording_count=4,
     )
-    entry = ClassicalWorkEntry(work=work, recording_count=7)
+    entry = ClassicalWorkEntry(work=work, recording_count=7, part_names=["Aria", "Duet"])
 
     for row in (composer, performer, entry):
         assert type(row).from_dict(row.to_dict()).to_dict() == row.to_dict()
@@ -397,3 +434,5 @@ def test_classical_rows_roundtrip() -> None:
         ArtistRole.CONDUCTOR,
         ArtistRole.SOLOIST,
     ]
+    assert ClassicalWorkEntry.from_dict(entry.to_dict()).part_names == ["Aria", "Duet"]
+    assert ClassicalWorkEntry(work=work).part_names == []

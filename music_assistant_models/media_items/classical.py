@@ -40,3 +40,4 @@ class ClassicalWorkEntry(DataClassDictMixin):
 
     work: WorkSummary
     recording_count: int = 0
+    part_names: list[str] = field(default_factory=list)  # names of its parts in the library
