@@ -275,6 +275,15 @@ class WorkType(StrEnum):
     QUARTET = "quartet"  # string quartet, etc.
     OVERTURE = "overture"
     BALLET = "ballet"
+    ARIA = "aria"
+    MOTET = "motet"
+    MADRIGAL = "madrigal"
+    PARTITA = "partita"
+    SYMPHONIC_POEM = "symphonic_poem"
+    ETUDE = "etude"
+    OPERETTA = "operetta"
+    ZARZUELA = "zarzuela"
+    INCIDENTAL_MUSIC = "incidental_music"
     OTHER = "other"
 
     @classmethod
