@@ -183,6 +183,7 @@ class MediaItemMetadata(DataClassDictMixin):
     # Artist-specific metadata (applicable to Artist media type only)
     life_span: LifeSpan | None = None  # birth/death for persons, founded/disbanded for groups
     artist_entity_type: ArtistEntityType | None = None  # MusicBrainz artist entity type
+    country: str | None = None  # ISO 3166-1 code of the country the artist is from
     review: str | None = None
     explicit: bool | None = None
     # NOTE: images is a list of available images, sorted by preference
