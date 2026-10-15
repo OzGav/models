@@ -16,6 +16,7 @@ from music_assistant_models.media_items import (
     Track,
     TrackSummary,
     Work,
+    WorkMovement,
     WorkSummary,
     media_from_dict,
 )
@@ -311,6 +312,33 @@ def test_work_related_works_roundtrip() -> None:
     assert restored.to_dict() == payload
 
 
+def test_work_movements_roundtrip() -> None:
+    """A Work's movements and the movements stored in its metadata round-trip."""
+    movements = [
+        WorkMovement(number=1, name="I. Allegro con brio", mbid="m1"),
+        WorkMovement(number=2, name="II. Andante con moto"),
+    ]
+    work = Work(
+        item_id="w1",
+        provider="library",
+        name="Symphony No. 5",
+        provider_mappings=set(),
+        movements=movements,
+        movements_from_musicbrainz=True,
+    )
+    work.metadata.movements = movements
+    payload = work.to_dict()
+    restored = Work.from_dict(payload)
+    assert restored.movements == movements
+    assert restored.movements_from_musicbrainz is True
+    assert restored.metadata.movements == movements
+    assert restored.to_dict() == payload
+    bare = Work(item_id="w2", provider="library", name="Bare", provider_mappings=set())
+    assert bare.movements == []
+    assert bare.movements_from_musicbrainz is False
+    assert bare.metadata.movements is None
+
+
 def test_work_summary_roundtrip() -> None:
     """WorkSummary round-trips and omits None-valued keys, also in nested composers."""
     summary = WorkSummary(
@@ -366,6 +394,8 @@ def test_recording_roundtrip() -> None:
             ItemMapping(item_id="al2", provider="test", name="Reissue", media_type=MediaType.ALBUM),
         ],
         duration=1200,
+        movement_numbers=[1, 2],
+        complete=False,
     )
     payload = recording.to_dict()
     restored = Recording.from_dict(payload)
@@ -374,8 +404,11 @@ def test_recording_roundtrip() -> None:
     assert [x.name for x in restored.albums] == ["Album", "Reissue"]
     assert restored.parent_work is not None
     assert restored.parent_work.name == "Symphonies"
+    assert restored.movement_numbers == [1, 2]
+    assert restored.complete is False
     assert restored.to_dict() == payload
     assert Recording.from_dict({**payload, "parent_work": None}).parent_work is None
+    assert Recording.from_dict({**payload, "complete": None}).complete is None
 
 
 def test_recommendation_folder_deserializes_work_items() -> None:
