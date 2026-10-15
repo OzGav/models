@@ -20,6 +20,7 @@ class ClassicalComposer(DataClassDictMixin):
     fanart: MediaItemImage | None = None  # the artist's fanart, as wide artwork for the row
     work_count: int = 0
     recording_count: int = 0
+    country: str | None = None  # ISO 3166-1 code of the country they are from
 
 
 @dataclass(kw_only=True)
