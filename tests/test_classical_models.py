@@ -418,7 +418,7 @@ def test_classical_rows_roundtrip() -> None:
     """The classical list rows round-trip with their summaries, roles and counts."""
     artist = ArtistSummary(item_id="a1", provider="library", name="Herbert von Karajan")
     work = WorkSummary(item_id="w1", provider="library", name="Symphony No. 5")
-    composer = ClassicalComposer(artist=artist, work_count=9, recording_count=12)
+    composer = ClassicalComposer(artist=artist, work_count=9, recording_count=12, country="AT")
     performer = ClassicalPerformer(
         artist=artist,
         main_role=ArtistRole.CONDUCTOR,
@@ -435,6 +435,7 @@ def test_classical_rows_roundtrip() -> None:
         ArtistRole.SOLOIST,
     ]
     assert ClassicalWorkEntry.from_dict(entry.to_dict()).part_names == ["Aria", "Duet"]
+    assert ClassicalComposer.from_dict(composer.to_dict()).country == "AT"
     assert ClassicalWorkEntry(work=work).part_names == []
 
 
