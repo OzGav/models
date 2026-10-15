@@ -170,6 +170,8 @@ class WorkMovement(DataClassDictMixin):
     number: int  # position of the movement within the work
     name: str  # name without the work's title, keeping a numeral it starts with
     mbid: str | None = None  # MusicBrainz work id of the movement
+    parent: int | None = None  # number of the movement this one is part of, such as its act
+    work_id: str | None = None  # library id of the part work the movement is, such as an act
 
 
 @dataclass(frozen=True, kw_only=True)
