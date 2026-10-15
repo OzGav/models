@@ -164,6 +164,15 @@ class AudioMetadata(DataClassDictMixin):
 
 
 @dataclass(frozen=True, kw_only=True)
+class WorkMovement(DataClassDictMixin):
+    """A movement of a work, such as "I. Allegro con brio" of a symphony."""
+
+    number: int  # position of the movement within the work
+    name: str  # name without the work's title, keeping a numeral it starts with
+    mbid: str | None = None  # MusicBrainz work id of the movement
+
+
+@dataclass(frozen=True, kw_only=True)
 class LifeSpan(DataClassDictMixin):
     """Life span dates for an artist (person or group)."""
 
@@ -223,6 +232,8 @@ class MediaItemMetadata(DataClassDictMixin):
     # last_musicbrainz_recording_lookup: timestamp a track's MusicBrainz recording was last
     # read for its performers and recording year
     last_musicbrainz_recording_lookup: int | None = None  # tracks only
+    # movements: the movements MusicBrainz lists as parts of a work, in order
+    movements: list[WorkMovement] | None = None  # works only
 
     def update(
         self,

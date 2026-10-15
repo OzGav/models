@@ -33,7 +33,7 @@ from music_assistant_models.helpers import (
 from music_assistant_models.translations import resolve_translation, translations_active
 from music_assistant_models.unique_list import UniqueList
 
-from .metadata import AudioMetadata, MediaItemImage, MediaItemMetadata
+from .metadata import AudioMetadata, MediaItemImage, MediaItemMetadata, WorkMovement
 from .provider_mapping import ProviderMapping
 
 # The media types a playlist is allowed to hold.
@@ -491,6 +491,8 @@ class Work(MediaItem):
     composition_year: int | None = None
     language: str | None = None  # language of the sung text, for vocal works
     musical_key: str | None = None  # e.g. "C minor"
+    movements: list[WorkMovement] = field(default_factory=list)  # in movement order
+    movements_from_musicbrainz: bool = False  # whether the movements are those MusicBrainz lists
 
 
 @dataclass(kw_only=True)
@@ -510,6 +512,9 @@ class Recording(DataClassDictMixin):
     # every album the recording appears on, the album its tracks come from first
     albums: list[ItemMapping] = field(default_factory=list)
     duration: int = 0  # total of all movements, in seconds
+    movement_numbers: list[int] = field(default_factory=list)  # the movements it covers
+    # whether it covers every movement, only known when the work's movements are MusicBrainz's
+    complete: bool | None = None
 
 
 @dataclass(kw_only=True)
