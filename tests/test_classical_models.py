@@ -317,6 +317,7 @@ def test_work_movements_roundtrip() -> None:
     movements = [
         WorkMovement(number=1, name="I. Allegro con brio", mbid="m1"),
         WorkMovement(number=2, name="II. Andante con moto"),
+        WorkMovement(number=3, name='No. 6 "Che gelida manina"', parent=1, work_id="49"),
     ]
     work = Work(
         item_id="w1",
