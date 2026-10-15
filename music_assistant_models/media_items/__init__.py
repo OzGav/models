@@ -48,6 +48,7 @@ from .metadata import (
     MediaItemMetadata,
     MediaItemPalette,
     MediaItemTranscriptCue,
+    WorkMovement,
 )
 from .provider_mapping import ProviderMapping
 from .summary import (
@@ -116,6 +117,7 @@ __all__ = [
     "TrackSummary",
     "UniqueList",
     "Work",
+    "WorkMovement",
     "WorkSummary",
 ]
 
