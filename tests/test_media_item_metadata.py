@@ -1,5 +1,6 @@
 """Tests for MediaItemMetadata."""
 
+from music_assistant_models.enums import RecordingSource
 from music_assistant_models.media_items.metadata import MediaItemMetadata
 
 
@@ -29,3 +30,16 @@ def test_update_keeps_a_stored_recording_year() -> None:
     metadata.update(MediaItemMetadata(recording_year=1977))
     assert metadata.recording_year == 1962
     assert MediaItemMetadata.from_dict({"recording_year": 1986}).recording_year == 1986
+
+
+def test_update_keeps_a_stored_recording_source_but_a_name_search() -> None:
+    """An update fills an empty recording source and replaces only a name search."""
+    metadata = MediaItemMetadata()
+    metadata.update(MediaItemMetadata(recording_source=RecordingSource.SEARCH))
+    metadata.update(MediaItemMetadata(recording_source=RecordingSource.ISRC))
+    metadata.update(MediaItemMetadata(recording_source=RecordingSource.SEARCH))
+    metadata.update(MediaItemMetadata(recording_source=RecordingSource.TAG))
+    assert metadata.recording_source == RecordingSource.ISRC
+    stored = MediaItemMetadata.from_dict({"recording_source": "tag"})
+    assert stored.recording_source == RecordingSource.TAG
+    assert MediaItemMetadata.from_dict({}).recording_source is None

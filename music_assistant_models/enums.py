@@ -304,6 +304,17 @@ class Period(StrEnum):
     CONTEMPORARY = "contemporary"
 
 
+class RecordingSource(StrEnum):
+    """Where the MusicBrainz recording id of a track came from."""
+
+    TAG = "tag"  # the track's own source, such as the tags of a file
+    RELEASE = "release"  # the tracklist of the track's album on MusicBrainz
+    URL = "url"  # a MusicBrainz link to the track on a streaming service
+    ISRC = "isrc"  # the track's ISRC
+    ACOUSTID = "acoustid"  # an audio fingerprint
+    SEARCH = "search"  # a search by the names of the track, its artist and album
+
+
 class ContentType(StrEnum):
     """Enum with audio content/container types supported by ffmpeg."""
 

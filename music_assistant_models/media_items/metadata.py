@@ -10,7 +10,7 @@ from typing import Any
 
 from mashumaro import DataClassDictMixin
 
-from music_assistant_models.enums import ArtistEntityType, ImageType, LinkType
+from music_assistant_models.enums import ArtistEntityType, ImageType, LinkType, RecordingSource
 from music_assistant_models.helpers import create_safe_string, create_sort_name, merge_lists
 from music_assistant_models.unique_list import UniqueList
 
@@ -235,6 +235,9 @@ class MediaItemMetadata(DataClassDictMixin):
     # last_musicbrainz_recording_lookup: timestamp a track's MusicBrainz recording was last
     # read for its performers and recording year
     last_musicbrainz_recording_lookup: int | None = None  # tracks only
+    # recording_source: where a track's MusicBrainz recording id came from,
+    # a name search giving way to any other source
+    recording_source: RecordingSource | None = None  # tracks only
     # movements: the movements MusicBrainz lists as parts of a work, in order
     movements: list[WorkMovement] | None = None  # works only
 
@@ -277,7 +280,7 @@ class MediaItemMetadata(DataClassDictMixin):
                     "last_musicbrainz_lookup",
                     "last_musicbrainz_recording_lookup",
                 )
-            ) or cur_val is None:
+            ) or cur_val in (None, RecordingSource.SEARCH):
                 setattr(self, fld.name, new_val)
         return self
 
