@@ -521,6 +521,9 @@ class Recording(DataClassDictMixin):
     movement_numbers: list[int] = field(default_factory=list)  # the movements it covers
     # whether it covers every movement, only known when the work's movements are MusicBrainz's
     complete: bool | None = None
+    # the movements of its work it covers, only when that work is a part of the requested work,
+    # such as an act of an opera, and it covers only some of them, such as two arias
+    part_movements: list[WorkMovement] = field(default_factory=list)
 
 
 @dataclass(kw_only=True)
