@@ -397,6 +397,7 @@ def test_recording_roundtrip() -> None:
         duration=1200,
         movement_numbers=[1, 2],
         complete=False,
+        part_movements=[WorkMovement(number=6, name="Che gelida manina", mbid="m6")],
     )
     payload = recording.to_dict()
     restored = Recording.from_dict(payload)
@@ -407,9 +408,12 @@ def test_recording_roundtrip() -> None:
     assert restored.parent_work.name == "Symphonies"
     assert restored.movement_numbers == [1, 2]
     assert restored.complete is False
+    assert [x.name for x in restored.part_movements] == ["Che gelida manina"]
     assert restored.to_dict() == payload
     assert Recording.from_dict({**payload, "parent_work": None}).parent_work is None
     assert Recording.from_dict({**payload, "complete": None}).complete is None
+    del payload["part_movements"]
+    assert Recording.from_dict(payload).part_movements == []
 
 
 def test_recommendation_folder_deserializes_work_items() -> None:
