@@ -123,24 +123,6 @@ def test_track_classical_fields_default_to_none() -> None:
     assert track.credits == []
 
 
-def test_album_credit_convenience_properties() -> None:
-    """Album.composers / conductors filter credits by role."""
-    composer = _artist_mapping("Beethoven", "a1")
-    conductor = _artist_mapping("Karajan", "a2")
-    album = Album(
-        item_id="al1",
-        provider="test",
-        name="Karajan conducts Beethoven",
-        provider_mappings=set(),
-        credits=[
-            Credit(artist=composer, role=ArtistRole.COMPOSER),
-            Credit(artist=conductor, role=ArtistRole.CONDUCTOR),
-        ],
-    )
-    assert album.composers == [composer]
-    assert album.conductors == [conductor]
-
-
 def test_artistrole_unknown_falls_back_to_performer() -> None:
     """ArtistRole._missing_ returns PERFORMER for forward compatibility."""
     assert ArtistRole("not_a_real_role") == ArtistRole.PERFORMER
@@ -212,13 +194,13 @@ def test_track_and_album_defaults_serialize_cleanly() -> None:
 
     album = Album(item_id="al1", provider="test", name="Pop album", provider_mappings=set())
     album_payload = album.to_dict()
-    assert album_payload["credits"] == []
+    assert "credits" not in album_payload
     assert album_payload["is_classical"] is False
     assert Album.from_dict(album_payload).to_dict() == album_payload
 
 
-def test_track_and_album_credits_roundtrip() -> None:
-    """Populated credits and movement fields on tracks and albums round-trip losslessly."""
+def test_track_credits_roundtrip() -> None:
+    """Populated credits and movement fields on tracks round-trip losslessly."""
     classical_credits = [
         Credit(artist=_artist_mapping("Beethoven", "a1"), role=ArtistRole.COMPOSER),
         Credit(artist=_artist_mapping("Karajan", "a2"), role=ArtistRole.CONDUCTOR),
@@ -244,17 +226,6 @@ def test_track_and_album_credits_roundtrip() -> None:
     assert restored_track.work is not None
     assert restored_track.work.media_type == MediaType.WORK
     assert restored_track.to_dict() == track_payload
-
-    album = Album(
-        item_id="al1",
-        provider="test",
-        name="Beethoven: Symphony No. 5",
-        provider_mappings=set(),
-        credits=classical_credits,
-        is_classical=True,
-    )
-    album_payload = album.to_dict()
-    assert Album.from_dict(album_payload).to_dict() == album_payload
 
 
 def test_artist_classical_fields_roundtrip() -> None:
