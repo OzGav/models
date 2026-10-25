@@ -381,7 +381,6 @@ class Album(MediaItem):
     artists: UniqueList[Artist | ItemMapping] = field(default_factory=UniqueList)
     album_type: AlbumType = AlbumType.UNKNOWN
     is_classical: bool = False
-    classical_tag: bool = False  # the source marks this album as classical
 
     @property
     def artist_str(self) -> str:
