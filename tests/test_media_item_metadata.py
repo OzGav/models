@@ -43,3 +43,10 @@ def test_update_keeps_a_stored_recording_source_but_a_name_search() -> None:
     stored = MediaItemMetadata.from_dict({"recording_source": "tag"})
     assert stored.recording_source == RecordingSource.TAG
     assert MediaItemMetadata.from_dict({}).recording_source is None
+
+
+def test_update_keeps_a_text_field_that_reads_search() -> None:
+    """Only the recording source gives way when it is a name search, a text field never does."""
+    metadata = MediaItemMetadata(mood="search")
+    metadata.update(MediaItemMetadata(mood="calm"))
+    assert metadata.mood == "search"

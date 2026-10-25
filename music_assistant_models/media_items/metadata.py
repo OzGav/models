@@ -280,7 +280,10 @@ class MediaItemMetadata(DataClassDictMixin):
                     "last_musicbrainz_lookup",
                     "last_musicbrainz_recording_lookup",
                 )
-            ) or cur_val in (None, RecordingSource.SEARCH):
+            ) or (
+                cur_val is None
+                or (fld.name == "recording_source" and cur_val == RecordingSource.SEARCH)
+            ):
                 setattr(self, fld.name, new_val)
         return self
 
