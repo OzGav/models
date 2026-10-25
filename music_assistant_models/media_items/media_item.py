@@ -355,7 +355,7 @@ class Artist(MediaItem):
 
 @dataclass(kw_only=True)
 class Credit(DataClassDictMixin):
-    """A single role-tagged artist credit on a track or album."""
+    """A single role-tagged artist credit on a track."""
 
     artist: Artist | ItemMapping
     role: ArtistRole
@@ -374,7 +374,6 @@ class Album(MediaItem):
     year: int | None = None
     artists: UniqueList[Artist | ItemMapping] = field(default_factory=UniqueList)
     album_type: AlbumType = AlbumType.UNKNOWN
-    credits: list[Credit] = field(default_factory=list)
     is_classical: bool = False
     classical_tag: bool = False  # the source marks this album as classical
 
@@ -382,24 +381,6 @@ class Album(MediaItem):
     def artist_str(self) -> str:
         """Return (combined) artist string for track."""
         return "/".join(x.name for x in self.artists)
-
-    @property
-    def composers(self) -> list[Artist | ItemMapping]:
-        """Return artists credited as composers, in tagged order."""
-        return [
-            c.artist
-            for c in sorted(self.credits, key=lambda x: x.position)
-            if c.role == ArtistRole.COMPOSER
-        ]
-
-    @property
-    def conductors(self) -> list[Artist | ItemMapping]:
-        """Return artists credited as conductors, in tagged order."""
-        return [
-            c.artist
-            for c in sorted(self.credits, key=lambda x: x.position)
-            if c.role == ArtistRole.CONDUCTOR
-        ]
 
 
 @dataclass(kw_only=True)
