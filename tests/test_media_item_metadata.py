@@ -50,3 +50,9 @@ def test_update_keeps_a_text_field_that_reads_search() -> None:
     metadata = MediaItemMetadata(mood="search")
     metadata.update(MediaItemMetadata(mood="calm"))
     assert metadata.mood == "search"
+
+
+def test_unknown_recording_source_reads_as_a_name_search() -> None:
+    """A recording source a newer version stored reads as the least trusted one."""
+    stored = MediaItemMetadata.from_dict({"recording_source": "something_new"})
+    assert stored.recording_source == RecordingSource.SEARCH
