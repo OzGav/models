@@ -314,6 +314,11 @@ class RecordingSource(StrEnum):
     ACOUSTID = "acoustid"  # an audio fingerprint
     SEARCH = "search"  # a search by the names of the track, its artist and album
 
+    @classmethod
+    def _missing_(cls, value: object) -> RecordingSource:  # noqa: ARG003
+        """Treat a source this version does not know as the least trusted one."""
+        return cls.SEARCH
+
 
 class ContentType(StrEnum):
     """Enum with audio content/container types supported by ffmpeg."""
