@@ -241,9 +241,10 @@ class ArtistEntityType(StrEnum):
 
 
 class ArtistRole(StrEnum):
-    """Role an artist plays on a track or album credit."""
+    """Role an artist plays in a credit on a track."""
 
-    MAIN_ARTIST = "main_artist"  # headline credit; equivalent to existing `artists` list
+    # input only, read from sources; main artists are stored as the track's artists
+    MAIN_ARTIST = "main_artist"
     COMPOSER = "composer"
     LYRICIST = "lyricist"
     ARRANGER = "arranger"
