@@ -238,6 +238,8 @@ class MediaItemMetadata(DataClassDictMixin):
     last_musicbrainz_recording_lookup: int | None = None  # tracks only
     # recording_source: where a track's MusicBrainz recording id came from
     recording_source: RecordingSource | None = None  # tracks only
+    # classical_tag: whether the source of a track marks it as classical
+    classical_tag: bool | None = None  # tracks only
     # movements: the movements MusicBrainz lists as parts of a work, in order
     movements: list[WorkMovement] | None = None  # works only
 
