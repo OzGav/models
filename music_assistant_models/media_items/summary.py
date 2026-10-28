@@ -134,6 +134,12 @@ class WorkSummary(_SummaryBase, Work):
     arrangement_of: UniqueList[ItemMappingSummary] = field(  # type: ignore[assignment]
         default_factory=UniqueList
     )
+    arrangements: UniqueList[ItemMappingSummary] = field(  # type: ignore[assignment]
+        default_factory=UniqueList
+    )
+    parts: UniqueList[ItemMappingSummary] = field(  # type: ignore[assignment]
+        default_factory=UniqueList
+    )
 
 
 @dataclass(kw_only=True, eq=False)
