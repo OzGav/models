@@ -236,8 +236,7 @@ class MediaItemMetadata(DataClassDictMixin):
     # last_musicbrainz_recording_lookup: timestamp a track's MusicBrainz recording was last
     # read for its performers and recording year
     last_musicbrainz_recording_lookup: int | None = None  # tracks only
-    # recording_source: where a track's MusicBrainz recording id came from,
-    # a name search giving way to any other source
+    # recording_source: where a track's MusicBrainz recording id came from
     recording_source: RecordingSource | None = None  # tracks only
     # movements: the movements MusicBrainz lists as parts of a work, in order
     movements: list[WorkMovement] | None = None  # works only
@@ -281,10 +280,7 @@ class MediaItemMetadata(DataClassDictMixin):
                     "last_musicbrainz_lookup",
                     "last_musicbrainz_recording_lookup",
                 )
-            ) or (
-                cur_val is None
-                or (fld.name == "recording_source" and cur_val == RecordingSource.SEARCH)
-            ):
+            ) or cur_val is None:
                 setattr(self, fld.name, new_val)
         return self
 
