@@ -401,7 +401,6 @@ class Track(MediaItem):
     movement_total: int | None = None
     movement_name: str | None = None  # e.g. "I. Allegro con brio"
     is_classical: bool = False
-    classical_tag: bool = False  # the source marks this track as classical
 
     @property
     def image(self) -> MediaItemImage | None:
