@@ -302,6 +302,12 @@ class Period(StrEnum):
     ROMANTIC = "romantic"
     MODERN = "modern"
     CONTEMPORARY = "contemporary"
+    UNKNOWN = "unknown"
+
+    @classmethod
+    def _missing_(cls, value: object) -> Period:  # noqa: ARG003
+        """Set default enum member if an unknown value is provided."""
+        return cls.UNKNOWN
 
 
 class RecordingSource(StrEnum):

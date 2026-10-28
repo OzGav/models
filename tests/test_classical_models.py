@@ -245,11 +245,11 @@ def test_artist_classical_fields_roundtrip() -> None:
     assert restored.is_classical is True
 
 
-def test_artist_unknown_period_deserializes_to_none() -> None:
-    """A period value unknown to this version deserializes to None instead of failing."""
+def test_artist_unknown_period_deserializes_to_unknown() -> None:
+    """A period value unknown to this version deserializes to UNKNOWN instead of failing."""
     payload = Artist(item_id="a1", provider="test", name="X", provider_mappings=set()).to_dict()
     payload["period"] = "not_a_real_period"
-    assert Artist.from_dict(payload).period is None
+    assert Artist.from_dict(payload).period is Period.UNKNOWN
 
 
 def test_work_related_works_roundtrip() -> None:
