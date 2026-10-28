@@ -312,7 +312,7 @@ def test_work_movements_roundtrip() -> None:
 
 
 def test_work_summary_roundtrip() -> None:
-    """WorkSummary round-trips and omits None-valued keys, also in nested composers."""
+    """WorkSummary round-trips and omits None-valued keys, also in nested related items."""
     summary = WorkSummary(
         item_id="w1",
         provider="library",
@@ -327,11 +327,19 @@ def test_work_summary_roundtrip() -> None:
         catalog_numbers=["Op. 67"],
         work_type=WorkType.SYMPHONY,
         composition_year=1808,
+        parts=UniqueList(
+            [
+                ItemMappingSummary(
+                    item_id="w2", provider="library", name="I. Allegro", media_type=MediaType.WORK
+                )
+            ]
+        ),
     )
     payload = summary.to_dict()
     assert payload["media_type"] == "work"
     assert not [k for k, v in payload.items() if v is None]
     assert not [k for k, v in payload["composers"][0].items() if v is None]
+    assert not [k for k, v in payload["parts"][0].items() if v is None]
     restored = WorkSummary.from_dict(payload)
     assert restored.to_dict() == payload
     assert isinstance(media_from_dict(payload), Work)
