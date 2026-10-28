@@ -421,11 +421,11 @@ def test_track_summary_work_omits_none_keys() -> None:
 
 
 def test_classical_tag_roundtrip() -> None:
-    """The classical tag on tracks defaults to False and round-trips."""
+    """The classical tag in track metadata defaults to None and round-trips."""
     track = Track(item_id="t1", provider="test", name="Track", provider_mappings=set())
-    assert not track.classical_tag
-    track.classical_tag = True
-    assert Track.from_dict(track.to_dict()).classical_tag
+    assert track.metadata.classical_tag is None
+    track.metadata.classical_tag = True
+    assert Track.from_dict(track.to_dict()).metadata.classical_tag is True
 
 
 def test_classical_rows_roundtrip() -> None:
