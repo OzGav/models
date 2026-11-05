@@ -14,7 +14,14 @@ from music_assistant_models.errors import InvalidDataError
 from music_assistant_models.unique_list import UniqueList
 
 from .audio_format import AudioFormat
-from .classical import ClassicalComposer, ClassicalPerformer, ClassicalWorkEntry
+from .classical import (
+    ClassicalComposer,
+    ClassicalComposerFilters,
+    ClassicalPerformer,
+    ClassicalPerformerFilters,
+    ClassicalWorkEntry,
+    ClassicalWorkFilters,
+)
 from .media_item import (
     Album,
     Artist,
@@ -80,8 +87,11 @@ __all__ = [
     "AudiobookSummary",
     "BrowseFolder",
     "ClassicalComposer",
+    "ClassicalComposerFilters",
     "ClassicalPerformer",
+    "ClassicalPerformerFilters",
     "ClassicalWorkEntry",
+    "ClassicalWorkFilters",
     "Credit",
     "Genre",
     "GenreSummary",

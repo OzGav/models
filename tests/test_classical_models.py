@@ -6,8 +6,11 @@ from music_assistant_models.media_items import (
     Artist,
     ArtistSummary,
     ClassicalComposer,
+    ClassicalComposerFilters,
     ClassicalPerformer,
+    ClassicalPerformerFilters,
     ClassicalWorkEntry,
+    ClassicalWorkFilters,
     Credit,
     ItemMapping,
     ItemMappingSummary,
@@ -451,6 +454,29 @@ def test_classical_rows_roundtrip() -> None:
     assert ClassicalWorkEntry.from_dict(entry.to_dict()).part_names == ["Aria", "Duet"]
     assert ClassicalComposer.from_dict(composer.to_dict()).country == "AT"
     assert ClassicalWorkEntry(work=work).part_names == []
+
+
+def test_classical_filter_values_roundtrip() -> None:
+    """The filter values of the classical lists round-trip, empty when nothing is present."""
+    composers = ClassicalComposerFilters(
+        periods=[Period.BAROQUE], countries=["AT", "DE"], country_unknown=True
+    )
+    performers = ClassicalPerformerFilters(roles=[ArtistRole.CONDUCTOR, ArtistRole.CHOIR])
+    works = ClassicalWorkFilters(
+        periods=[Period.CLASSICAL],
+        work_types=[WorkType.SYMPHONY],
+        work_type_unknown=True,
+        earliest_year=1720,
+        latest_year=1809,
+    )
+
+    for values in (composers, performers, works):
+        assert type(values).from_dict(values.to_dict()) == values
+    assert ClassicalWorkFilters.from_dict(works.to_dict()).work_types == [WorkType.SYMPHONY]
+    assert ClassicalWorkFilters() == ClassicalWorkFilters(
+        periods=[], work_types=[], work_type_unknown=False, earliest_year=None, latest_year=None
+    )
+    assert ClassicalComposerFilters().countries == []
 
 
 def test_track_work_roundtrips_as_full_work_or_mapping() -> None:
