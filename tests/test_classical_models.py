@@ -303,6 +303,12 @@ def test_work_movements_roundtrip() -> None:
         WorkMovement(number=2, name="II. Andante con moto"),
         WorkMovement(number=3, name='No. 6 "Che gelida manina"', parent=1, work_id="49"),
         WorkMovement(number=4, name="Aria", parent=1, under_part=True),
+        WorkMovement(
+            number=5,
+            name='IVa. "Da versammelten sich" (excerpt)',
+            short_name="IVa. Da versammelten sich",
+            excerpt=True,
+        ),
     ]
     work = Work(
         item_id="w1",
@@ -323,7 +329,9 @@ def test_work_movements_roundtrip() -> None:
     assert bare.movements == []
     assert bare.movements_from_musicbrainz is False
     assert bare.metadata.movements is None
-    assert WorkMovement.from_dict({"number": 1, "name": "I"}).under_part is False
+    bare_movement = WorkMovement.from_dict({"number": 1, "name": "I"})
+    assert bare_movement.under_part is False
+    assert (bare_movement.short_name, bare_movement.excerpt) == (None, False)
 
 
 def test_work_summary_roundtrip() -> None:
@@ -431,7 +439,7 @@ def test_recording_heading_roundtrip() -> None:
 
 
 def test_recording_page_structure_roundtrip() -> None:
-    """A recording's part, coverage and track movements round-trip and are empty by default."""
+    """A recording's part, coverage, track movements and names round-trip, empty by default."""
     recording = Recording(
         key="w2:abbado:1980",
         work=ItemMapping(item_id="w2", provider="library", name="Act I", media_type=MediaType.WORK),
@@ -440,17 +448,24 @@ def test_recording_page_structure_roundtrip() -> None:
             kind=RecordingCoverageKind.MOVEMENT_PIECES, movement=1, held=2, total=9
         ),
         track_movements={"library://track/1": [2, 1], "library://track/2": [3]},
+        track_names={"library://track/1": "Che gelida manina!"},
     )
     payload = recording.to_dict()
     restored = Recording.from_dict(payload)
     assert restored.part == 1
     assert restored.coverage == recording.coverage
     assert restored.track_movements == {"library://track/1": [2, 1], "library://track/2": [3]}
+    assert restored.track_names == {"library://track/1": "Che gelida manina!"}
     assert restored.to_dict() == payload
-    for key in ("part", "coverage", "track_movements"):
+    for key in ("part", "coverage", "track_movements", "track_names"):
         del payload[key]
     bare = Recording.from_dict(payload)
-    assert (bare.part, bare.coverage, bare.track_movements) == (None, None, {})
+    assert (bare.part, bare.coverage, bare.track_movements, bare.track_names) == (
+        None,
+        None,
+        {},
+        {},
+    )
 
 
 def test_recommendation_folder_deserializes_work_items() -> None:
