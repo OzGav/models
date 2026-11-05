@@ -359,6 +359,9 @@ class Credit(DataClassDictMixin):
     role: ArtistRole
     instrument: str | None = None  # only meaningful for SOLOIST / PERFORMER
     position: int = 0  # ordering within a role group; lower first
+    # the instrument as shown after the artist's name, such as "tenor" for "tenor vocals", empty
+    # when nothing shows or the name already says it; set per request, never stored
+    instrument_label: str = ""
 
 
 @dataclass(kw_only=True)
