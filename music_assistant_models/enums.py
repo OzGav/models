@@ -327,6 +327,15 @@ class RecordingSource(StrEnum):
         return cls.SEARCH
 
 
+class RecordingHeadingKind(StrEnum):
+    """What a heading of a work's page that recordings show under stands for."""
+
+    WORK = "work"  # the work itself or one of its parts, such as an act
+    COMPLETE = "complete"  # the recordings of the whole work
+    MOVEMENT = "movement"  # a top-level movement of the work, such as an act
+    OTHER = "other"  # the recordings that fit under no other heading
+
+
 class ContentType(StrEnum):
     """Enum with audio content/container types supported by ffmpeg."""
 
