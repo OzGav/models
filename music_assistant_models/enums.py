@@ -749,6 +749,9 @@ class EventType(StrEnum):
     DASHBOARDS_UPDATED = "dashboards_updated"
     DASHBOARD_SESSIONS_UPDATED = "dashboard_sessions_updated"
     MUSIC_SYNC_COMPLETED = "music_sync_completed"
+    # the MusicBrainz link run ended; data is a dict with the counts of classical
+    # albums, recordings, works and composers still to look up
+    CLASSICAL_LINK_PROGRESS = "classical_link_progress"
     AUTH_SESSION = "auth_session"
     CORE_STATE_UPDATED = "core_state_updated"
     SHUTDOWN = "application_shutdown"  # deprecated: replaced by "core_state_updated"
