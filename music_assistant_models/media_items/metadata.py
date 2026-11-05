@@ -188,6 +188,11 @@ class WorkMovement(DataClassDictMixin):
     # whether the work's page lists it under a part, such as an aria under its act; set per
     # request, never stored
     under_part: bool = False
+    # the name shortened to its quoted words after any score number or scene, such as
+    # "XXXIX. Erbarme dich, mein Gott", without an excerpt ending; set per request, never stored
+    short_name: str | None = None
+    # whether the name ends in " (excerpt)"; set per request, never stored
+    excerpt: bool = False
 
 
 @dataclass(frozen=True, kw_only=True)

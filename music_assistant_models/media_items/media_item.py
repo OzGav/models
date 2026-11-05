@@ -525,6 +525,8 @@ class Recording(DataClassDictMixin):
     coverage: RecordingCoverage | None = None
     # the movement numbers each track counts towards on the requested work's page, by track uri
     track_movements: dict[str, list[int]] = field(default_factory=dict)
+    # the name each track shows under on the requested work's page, by track uri
+    track_names: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(kw_only=True)
