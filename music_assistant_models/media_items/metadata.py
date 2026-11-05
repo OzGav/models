@@ -183,15 +183,15 @@ class WorkMovement(DataClassDictMixin):
     name: str  # name without the work's title, keeping a numeral it starts with
     mbid: str | None = None  # MusicBrainz work id of the movement
     parent: int | None = None  # number of the movement this one is part of, such as its act
-    # library id of the part work the movement is, such as an act; set per request, never stored
+    # library id of the part work the movement is, such as an act; only filled per request
     work_id: str | None = None
-    # whether the work's page lists it under a part, such as an aria under its act; set per
-    # request, never stored
+    # whether the work's page lists it under a part, such as an aria under its act; only
+    # filled per request
     under_part: bool = False
     # the name shortened to its quoted words after any score number or scene, such as
-    # "XXXIX. Erbarme dich, mein Gott", without an excerpt ending; set per request, never stored
+    # "XXXIX. Erbarme dich, mein Gott", without an excerpt ending; only filled per request
     short_name: str | None = None
-    # whether the name ends in " (excerpt)"; set per request, never stored
+    # whether the name ends in " (excerpt)"; only filled per request
     excerpt: bool = False
 
 
