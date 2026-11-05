@@ -20,6 +20,7 @@ from music_assistant_models.enums import (
     MediaType,
     Period,
     RecommendationFolderType,
+    RecordingCoverageKind,
     RecordingHeadingKind,
     WorkType,
 )
@@ -483,6 +484,17 @@ class RecordingHeading(DataClassDictMixin):
 
 
 @dataclass(kw_only=True)
+class RecordingCoverage(DataClassDictMixin):
+    """What part of the work a recording holds, on the page of the work it was requested for."""
+
+    kind: RecordingCoverageKind
+    movement: int | None = None  # the number of the movement it holds whole or pieces of
+    held: int = 0  # the number of pieces or movements it holds, 0 for a whole movement
+    # the number of pieces or movements there are, 0 when unknown or for a whole movement
+    total: int = 0
+
+
+@dataclass(kw_only=True)
 class Recording(DataClassDictMixin):
     """
     One performance of a Work, grouping the tracks that hold its movements.
@@ -507,6 +519,12 @@ class Recording(DataClassDictMixin):
     part_movements: list[WorkMovement] = field(default_factory=list)
     # the heading it shows under, only when requested for a work's page
     heading: RecordingHeading | None = None
+    # the number of the movement of the requested work that is the part it is of, such as its act
+    part: int | None = None
+    # what it holds when that is not the whole work, only when requested for a work's page
+    coverage: RecordingCoverage | None = None
+    # the movement numbers each track counts towards on the requested work's page, by track uri
+    track_movements: dict[str, list[int]] = field(default_factory=dict)
 
 
 @dataclass(kw_only=True)

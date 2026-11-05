@@ -174,6 +174,9 @@ class WorkMovement(DataClassDictMixin):
     parent: int | None = None  # number of the movement this one is part of, such as its act
     # library id of the part work the movement is, such as an act; set per request, never stored
     work_id: str | None = None
+    # whether the work's page lists it under a part, such as an aria under its act; set per
+    # request, never stored
+    under_part: bool = False
 
 
 @dataclass(frozen=True, kw_only=True)
