@@ -43,6 +43,13 @@ class ClassicalWorkEntry(DataClassDictMixin):
     recording_count: int = 0
     part_names: list[str] = field(default_factory=list)  # names of its parts in the library
     period: Period | None = None  # the period of its (first) composer
+    # names of the others performing on the recordings of the performer the list is filtered
+    # on: orchestras and ensembles, conductors, soloists, choirs, then other performers; only
+    # filled per request with a performer filter
+    co_performers: list[str] = field(default_factory=list)
+    # whether the calling user likes every track of those recordings, None without tracks;
+    # only filled per request with a performer filter
+    liked: bool | None = None
 
 
 @dataclass(kw_only=True)
