@@ -860,6 +860,9 @@ class EventType(StrEnum):
     DASHBOARDS_UPDATED = "dashboards_updated"
     DASHBOARD_SESSIONS_UPDATED = "dashboard_sessions_updated"
     MUSIC_SYNC_COMPLETED = "music_sync_completed"
+    # the MusicBrainz link run ended; data is a dict with the counts of classical
+    # albums, recordings, works and composers still to look up
+    CLASSICAL_LINK_PROGRESS = "classical_link_progress"
     AUTH_SESSION = "auth_session"
     # auth_signin_methods_updated: the sign-in methods the login page can offer changed
     AUTH_SIGNIN_METHODS_UPDATED = "auth_signin_methods_updated"
