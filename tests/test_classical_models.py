@@ -5,6 +5,7 @@ from music_assistant_models.enums import (
     ExternalID,
     MediaType,
     Period,
+    RecordingCoverageKind,
     RecordingHeadingKind,
     WorkType,
 )
@@ -23,6 +24,7 @@ from music_assistant_models.media_items import (
     ItemMappingSummary,
     RecommendationFolder,
     Recording,
+    RecordingCoverage,
     RecordingHeading,
     Track,
     TrackSummary,
@@ -300,6 +302,7 @@ def test_work_movements_roundtrip() -> None:
         WorkMovement(number=1, name="I. Allegro con brio", mbid="m1"),
         WorkMovement(number=2, name="II. Andante con moto"),
         WorkMovement(number=3, name='No. 6 "Che gelida manina"', parent=1, work_id="49"),
+        WorkMovement(number=4, name="Aria", parent=1, under_part=True),
     ]
     work = Work(
         item_id="w1",
@@ -320,6 +323,7 @@ def test_work_movements_roundtrip() -> None:
     assert bare.movements == []
     assert bare.movements_from_musicbrainz is False
     assert bare.metadata.movements is None
+    assert WorkMovement.from_dict({"number": 1, "name": "I"}).under_part is False
 
 
 def test_work_summary_roundtrip() -> None:
@@ -424,6 +428,29 @@ def test_recording_heading_roundtrip() -> None:
     assert restored.to_dict() == payload
     del payload["heading"]
     assert Recording.from_dict(payload).heading is None
+
+
+def test_recording_page_structure_roundtrip() -> None:
+    """A recording's part, coverage and track movements round-trip and are empty by default."""
+    recording = Recording(
+        key="w2:abbado:1980",
+        work=ItemMapping(item_id="w2", provider="library", name="Act I", media_type=MediaType.WORK),
+        part=1,
+        coverage=RecordingCoverage(
+            kind=RecordingCoverageKind.MOVEMENT_PIECES, movement=1, held=2, total=9
+        ),
+        track_movements={"library://track/1": [2, 1], "library://track/2": [3]},
+    )
+    payload = recording.to_dict()
+    restored = Recording.from_dict(payload)
+    assert restored.part == 1
+    assert restored.coverage == recording.coverage
+    assert restored.track_movements == {"library://track/1": [2, 1], "library://track/2": [3]}
+    assert restored.to_dict() == payload
+    for key in ("part", "coverage", "track_movements"):
+        del payload[key]
+    bare = Recording.from_dict(payload)
+    assert (bare.part, bare.coverage, bare.track_movements) == (None, None, {})
 
 
 def test_recommendation_folder_deserializes_work_items() -> None:
