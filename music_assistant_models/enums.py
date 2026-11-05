@@ -336,6 +336,14 @@ class RecordingHeadingKind(StrEnum):
     OTHER = "other"  # the recordings that fit under no other heading
 
 
+class RecordingCoverageKind(StrEnum):
+    """What part of a work a recording holds, when not all of it."""
+
+    MOVEMENT = "movement"  # one movement whole, such as an act
+    MOVEMENT_PIECES = "movement_pieces"  # some of the pieces of one movement, such as two arias
+    MOVEMENTS = "movements"  # some of the movements of the work
+
+
 class ContentType(StrEnum):
     """Enum with audio content/container types supported by ffmpeg."""
 
