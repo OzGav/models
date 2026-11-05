@@ -1,6 +1,13 @@
 """Tests for classical-music model additions: Credit, Work, Recording and related fields."""
 
-from music_assistant_models.enums import ArtistRole, ExternalID, MediaType, Period, WorkType
+from music_assistant_models.enums import (
+    ArtistRole,
+    ExternalID,
+    MediaType,
+    Period,
+    RecordingHeadingKind,
+    WorkType,
+)
 from music_assistant_models.media_items import (
     Album,
     Artist,
@@ -16,6 +23,7 @@ from music_assistant_models.media_items import (
     ItemMappingSummary,
     RecommendationFolder,
     Recording,
+    RecordingHeading,
     Track,
     TrackSummary,
     Work,
@@ -396,6 +404,26 @@ def test_recording_roundtrip() -> None:
     assert Recording.from_dict({**payload, "complete": None}).complete is None
     del payload["part_movements"]
     assert Recording.from_dict(payload).part_movements == []
+
+
+def test_recording_heading_roundtrip() -> None:
+    """A recording's heading on its work's page round-trips and is absent by default."""
+    work = ItemMapping(item_id="w2", provider="library", name="Act I", media_type=MediaType.WORK)
+    recording = Recording(
+        key="w2:abbado:1980",
+        work=work,
+        heading=RecordingHeading(kind=RecordingHeadingKind.WORK, work=work, order=1, rank=2),
+    )
+    payload = recording.to_dict()
+    restored = Recording.from_dict(payload)
+    assert restored.heading is not None
+    assert restored.heading.kind is RecordingHeadingKind.WORK
+    assert restored.heading.work == work
+    assert restored.heading.movement is None
+    assert (restored.heading.order, restored.heading.rank) == (1, 2)
+    assert restored.to_dict() == payload
+    del payload["heading"]
+    assert Recording.from_dict(payload).heading is None
 
 
 def test_recommendation_folder_deserializes_work_items() -> None:

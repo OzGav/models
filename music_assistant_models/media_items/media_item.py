@@ -20,6 +20,7 @@ from music_assistant_models.enums import (
     MediaType,
     Period,
     RecommendationFolderType,
+    RecordingHeadingKind,
     WorkType,
 )
 from music_assistant_models.errors import InvalidDataError
@@ -471,6 +472,17 @@ class Work(MediaItem):
 
 
 @dataclass(kw_only=True)
+class RecordingHeading(DataClassDictMixin):
+    """The heading a recording shows under on the page of the work it was requested for."""
+
+    kind: RecordingHeadingKind
+    work: ItemMapping | None = None  # the work a work heading stands for
+    movement: int | None = None  # the number of the movement a movement heading stands for
+    order: int = 0  # position of the heading on the page
+    rank: int = 0  # position of the recording under the heading
+
+
+@dataclass(kw_only=True)
 class Recording(DataClassDictMixin):
     """
     One performance of a Work, grouping the tracks that hold its movements.
@@ -493,6 +505,8 @@ class Recording(DataClassDictMixin):
     # the movements of its work it covers, only when that work is a part of the requested work,
     # such as an act of an opera, and it covers only some of them, such as two arias
     part_movements: list[WorkMovement] = field(default_factory=list)
+    # the heading it shows under, only when requested for a work's page
+    heading: RecordingHeading | None = None
 
 
 @dataclass(kw_only=True)
