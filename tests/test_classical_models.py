@@ -167,6 +167,14 @@ def test_credit_roundtrip() -> None:
     assert restored.to_dict() == credit.to_dict()
 
 
+def test_credit_instrument_label_defaults_to_empty() -> None:
+    """The instrument label of a credit defaults to empty and round-trips."""
+    credit = Credit(artist=_artist_mapping("Pavarotti"), role=ArtistRole.SOLOIST)
+    assert credit.instrument_label == ""
+    credit.instrument_label = "tenor"
+    assert Credit.from_dict(credit.to_dict()).instrument_label == "tenor"
+
+
 def test_work_full_roundtrip() -> None:
     """Work round-trips losslessly with composers, MusicBrainz Work ID and all its fields."""
     work = Work(
